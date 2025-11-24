@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import productRoutes from './routes/product.routes';
 import { AppError } from './middleware/AppError';
 import connectDB from './config/db';
+import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 
 //basic boilerplate if there is env. as it is small prject i dont have any env
@@ -13,6 +14,16 @@ const startServer = async () => {
   await connectDB();
 
   app.use(express.json());
+
+  // --- Rate Limiting Middleware ---
+  // This will apply to all routes that start with /api
+  const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    message: 'Too many requests from this IP, please try again after 15 minutes.',
+  });
 
   //all rout declaration
   app.use('/api/products', productRoutes);

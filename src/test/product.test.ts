@@ -39,7 +39,10 @@ afterEach(async () => {
   await mongoose.connection.db.dropDatabase();
 });
 
+// writting test suite
 describe('Product API', () => {
+
+  // test creating new test product
   it('should create a new product', async () => {
     const newProduct = { name: 'Laptop', price: 1200, category: 'Electronics' };
     const res = await request(app).post('/api/products').send(newProduct);
@@ -50,18 +53,21 @@ describe('Product API', () => {
     expect(res.body.category).toBe(newProduct.category);
   });
 
+  // try to create with missing field
   it('should return 400 when creating product with missing fields', async () => {
     const res = await request(app).post('/api/products').send({ price: 100 });
     expect(res.status).toBe(400);
     expect(res.body.message).toBe('\"name\" is required');
   });
 
+  // try to create with invalid price
   it('should return 400 when creating product with invalid price', async () => {
     const res = await request(app).post('/api/products').send({ name: 'Test', price: 0, category: 'Cat' });
     expect(res.status).toBe(400);
     expect(res.body.message).toBe('\"price\" must be greater than 0');
   });
 
+  //get product with pagination
   it('should get all products (paginated)', async () => {
     const product = { name: 'Book', price: 25, category: 'Books' };
     await request(app).post('/api/products').send(product);
@@ -76,6 +82,7 @@ describe('Product API', () => {
     expect(res.body.data[0].name).toBe(product.name);
   });
 
+  // get single product by id
   it('should get a single product by ID', async () => {
     const product = { name: 'Headphones', price: 150, category: 'Electronics' };
     const created = await request(app).post('/api/products').send(product);
@@ -85,6 +92,7 @@ describe('Product API', () => {
     expect(res.body.name).toBe(product.name);
   });
 
+  //test if the product is not there
   it('should return 404 for non-existent product', async () => {
     const fakeId = new mongoose.Types.ObjectId();
     const res = await request(app).get(`/api/products/${fakeId}`);
@@ -92,6 +100,7 @@ describe('Product API', () => {
     expect(res.body.message).toBe('Product not found');
   });
 
+  //update product partially
   it('should update a product partially', async () => {
     const created = await request(app).post('/api/products').send({ name: 'Old', price: 50, category: 'Cat' });
     const update = { price: 100 };
