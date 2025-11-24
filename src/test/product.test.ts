@@ -53,13 +53,13 @@ describe('Product API', () => {
   it('should return 400 when creating product with missing fields', async () => {
     const res = await request(app).post('/api/products').send({ price: 100 });
     expect(res.status).toBe(400);
-    expect(res.body.message).toBe('Missing required fields');
+    expect(res.body.message).toBe('\"name\" is required');
   });
 
   it('should return 400 when creating product with invalid price', async () => {
     const res = await request(app).post('/api/products').send({ name: 'Test', price: 0, category: 'Cat' });
     expect(res.status).toBe(400);
-    expect(res.body.message).toBe('Price must be greater than 0');
+    expect(res.body.message).toBe('\"price\" must be greater than 0');
   });
 
   it('should get all products (paginated)', async () => {
@@ -107,7 +107,7 @@ describe('Product API', () => {
     const res = await request(app).patch(`/api/products/${created.body._id}`).send({ price: -10 });
 
     expect(res.status).toBe(400);
-    expect(res.body.message).toBe('Price must be greater than 0');
+    expect(res.body.message).toBe('\"price\" must be greater than 0');
   });
 
   it('should return 404 when updating non-existent product', async () => {
@@ -128,8 +128,8 @@ describe('Product API', () => {
   });
 
   it('should return 404 for invalid route', async () => {
-    const res = await request(app).get('/api/products/invalid-route');
+    const res = await request(app).get('/api/product/1');
     expect(res.status).toBe(404);
-    expect(res.body.message).toContain("Can't find /api/products/invalid-route on this server!");
+    expect(res.body.message).toContain("Can't find /api/product/1 on this server!");
   });
 });

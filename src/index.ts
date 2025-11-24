@@ -17,17 +17,20 @@ const startServer = async () => {
   //all rout declaration
   app.use('/api/products', productRoutes);
 
-  // Handle 404 for routes that are not found
-  app.all('*', (req: Request, res: Response, next: NextFunction) => {
-    next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
-  });
+// Handle 404 for routes that are not found
+app.all('*', (req: Request, res: Response, next: NextFunction) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
 
-  app.use((err: AppError, req: Request, res: Response, next: NextFunction) => {
-    res.status(err.status || 500).json({
-      message: err.message,
-      status: err.status || 500,
-    });
+// Global error handler
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  const statusCode = err.status || 500;
+  const message = err.message || 'Internal Server Error';
+  res.status(statusCode).json({
+    message,
+    status: statusCode,
   });
+});
 
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
