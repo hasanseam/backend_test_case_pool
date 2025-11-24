@@ -7,6 +7,7 @@ A RESTful API for managing a product catalog, built with Node.js, Express, and T
 *   **CRUD Operations**: Full support for Creating, Reading, Updating, and Deleting products.
 *   **TypeScript**: Type-safe code for better maintainability and fewer runtime errors.
 *   **Validation**: Relies on Mongoose schemas for robust server-side data validation.
+*   **Rate Limiting**: Basic protection against brute-force attacks on all API endpoints.
 *   **Dockerized**: Includes `Dockerfile` and `docker-compose.yml` for a consistent development and production environment.
 *   **Testing**: Comes with a full integration test suite using Jest and Supertest.
 *   **Database Seeding**: A script to populate the database with fake data for testing purposes.
