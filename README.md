@@ -156,21 +156,38 @@ Here is a detailed list of the available API endpoints.
 
 *   **Endpoint**: `GET /api/products`
 *   **Description**: Retrieves a list of all products.
+*   **Query Parameters (Optional)**:
+    *   `page` (number): The page number to retrieve. Default: `1`.
+    *   `limit` (number): The number of products per page. Default: `10`.
+    *   `category` (string): Filter products by a specific category.
+    *   `minPrice` (number): Filter products with a price greater than or equal to this value.
+    *   `maxPrice` (number): Filter products with a price less than or equal to this value.
 *   **Success Response** (`200 OK`):
     ```json
-    [
-      {
-        "_id": "60d5f2f5c7b3b3b3b3b3b3b3",
-        "name": "Wireless Keyboard",
-        "price": 79.99,
-        "category": "Electronics",
-        "__v": 0
-      }
-    ]
+    {
+      "data": [
+        {
+          "_id": "60d5f2f5c7b3b3b3b3b3b3b3",
+          "name": "Wireless Keyboard",
+          "price": 79.99,
+          "category": "Electronics",
+          "__v": 0
+        }
+      ],
+      "total": 1,
+      "page": 1,
+      "pages": 1
+    }
     ```
 *   **Example with `curl`**:
     ```sh
+    # Get all products (default page 1, limit 10)
     curl http://localhost:3000/api/products
+    ```
+*   **Example with Filtering and Pagination**:
+    ```sh
+    # Get page 2 of products in the "Electronics" category, with a price between 50 and 500
+    curl "http://localhost:3000/api/products?page=2&limit=5&category=Electronics&minPrice=50&maxPrice=500"
     ```
 
 ### 3. Get a Single Product
@@ -214,7 +231,7 @@ Here is a detailed list of the available API endpoints.
     ```
 *   **Example with `curl`**:
     ```sh
-    curl -X PUT http://localhost:3000/api/products/60d5f2f5c7b3b3b3b3b3b3b3 \
+    curl -X PATCH http://localhost:3000/api/products/60d5f2f5c7b3b3b3b3b3b3b3 \
     -H "Content-Type: application/json" \
     -d '{"price": 75.50}'
     ```
